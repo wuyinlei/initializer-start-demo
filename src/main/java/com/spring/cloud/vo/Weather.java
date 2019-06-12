@@ -48,4 +48,17 @@ public class Weather extends BaseVo {
     public void setForecast(List<Forecast> forecast) {
         this.forecast = forecast;
     }
+
+
+    @Override
+    public String toString() {
+        return "Weather{" +
+                "city='" + city + '\'' +
+                ", aqi='" + aqi + '\'' +
+                ", ganmao='" + ganmao + '\'' +
+                ", wendu='" + wendu + '\'' +
+                ", yesterday=" + yesterday +
+                ", forecast=" + forecast +
+                '}';
+    }
 }

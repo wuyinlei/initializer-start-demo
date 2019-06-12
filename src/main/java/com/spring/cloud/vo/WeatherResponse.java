@@ -3,8 +3,8 @@ package com.spring.cloud.vo;
 public class WeatherResponse extends BaseVo{
 
     private Weather data;
-    private Integer code;
-    private String msg;
+    private Integer status;
+    private String desc;
     public Weather getData() {
         return data;
     }
@@ -12,19 +12,19 @@ public class WeatherResponse extends BaseVo{
         this.data = data;
     }
 
-    public Integer getCode() {
-        return code;
+    public Integer getStatus() {
+        return status;
     }
 
-    public void setCode(Integer code) {
-        this.code = code;
+    public void setStatus(Integer status) {
+        this.status = status;
     }
 
-    public String getMsg() {
-        return msg;
+    public String getDesc() {
+        return desc;
     }
 
-    public void setMsg(String msg) {
-        this.msg = msg;
+    public void setDesc(String desc) {
+        this.desc = desc;
     }
 }

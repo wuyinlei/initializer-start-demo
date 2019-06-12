@@ -2,6 +2,8 @@ package com.spring.cloud.service;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.spring.cloud.vo.WeatherResponse;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.data.redis.core.ValueOperations;
@@ -15,7 +17,10 @@ import java.util.concurrent.TimeUnit;
 @Service
 public class WeatherDataServiceImpl implements WeatherDataService {
 
+    private static Logger logger = LoggerFactory.getLogger(WeatherDataServiceImpl.class);
+
     private static final String WEATHER_URI = "https://www.apiopen.top/weatherApi?";
+    private static final String WEATHER_URI_BY_CITY_ID = "http://wthrcdn.etouch.cn/weather_mini?";
 
     private static final long TIME_OUT = 1800L;  //半个小时
 
@@ -28,9 +33,11 @@ public class WeatherDataServiceImpl implements WeatherDataService {
     @Override
     public WeatherResponse getDataByCityId(String cityId) {
         //http://wthrcdn.etouch.cn/weather_mini?citykey=101280601
-        String uri = WEATHER_URI + "citykey=" + cityId;
+        String uri = WEATHER_URI_BY_CITY_ID + "citykey=" + cityId;
+        logger.info(" getDataByCityId " + cityId);
+        logger.info(" WEATHER_URI " + uri);
         WeatherResponse resp = doGetWeahter(uri);
-
+        logger.info(" WeatherResponse " + resp.getData().toString());
         return resp;
     }
 
@@ -75,5 +82,31 @@ public class WeatherDataServiceImpl implements WeatherDataService {
         String uri = WEATHER_URI + "city=" + cityName;
         WeatherResponse resp = doGetWeahter(uri);
         return resp;
+    }
+
+    @Override
+    public void syncDateByCityId(String cityId) {
+        String uri = WEATHER_URI_BY_CITY_ID + "citykey=" + cityId;
+        this.saveWeatherData(uri);
+    }
+
+    /**
+     * 把天气数据放在缓存
+     * @param uri
+     */
+    private void saveWeatherData(String uri) {
+        String key = uri;
+        String strBody = null;
+        ValueOperations<String, String>  ops = stringRedisTemplate.opsForValue();
+
+        // 调用服务接口来获取
+        ResponseEntity<String> respString = restTemplate.getForEntity(uri, String.class);
+
+        if (respString.getStatusCodeValue() == 200) {
+            strBody = respString.getBody();
+        }
+        // 数据写入缓存
+        ops.set(key, strBody, TIME_OUT, TimeUnit.SECONDS);
+
     }
 }
