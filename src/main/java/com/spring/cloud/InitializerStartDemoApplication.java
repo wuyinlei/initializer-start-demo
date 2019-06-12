@@ -1,4 +1,4 @@
-package com.spring.cloud.initializerstartdemo;
+package com.spring.cloud;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;

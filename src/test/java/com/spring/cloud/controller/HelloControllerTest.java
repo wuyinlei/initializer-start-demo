@@ -1,4 +1,4 @@
-package com.spring.cloud.initializerstartdemo.controller;
+package com.spring.cloud.controller;
 
 import org.hamcrest.Matchers;
 import org.junit.Test;
